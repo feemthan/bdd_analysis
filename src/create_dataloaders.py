@@ -72,8 +72,8 @@ class CustomDataset(torch.utils.data.Dataset):
             boxes = torch.tensor([[0.0, 0.0, 1.0, 1.0]], dtype=torch.float32)
             labels = torch.tensor([0], dtype=torch.int64)
         else:
-                boxes = torch.tensor(boxes, dtype=torch.float32)
-                labels = torch.tensor(labels, dtype=torch.int64)
+            boxes = torch.tensor(boxes, dtype=torch.float32)
+            labels = torch.tensor(labels, dtype=torch.int64)
 
         # Create target dict
         target = {

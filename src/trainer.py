@@ -1,11 +1,12 @@
 from typing import Any
-import mlflow
 
+import mlflow
 import torch
 from torchmetrics.detection.mean_ap import MeanAveragePrecision
 from torchvision.models.detection import fasterrcnn_resnet50_fpn
 from torchvision.models.detection.faster_rcnn import FasterRCNN, FastRCNNPredictor
 from tqdm import tqdm
+
 from src.create_dataloaders import compute_precision_recall_iou
 
 
@@ -26,6 +27,7 @@ def get_model(num_classes, freeze_backbone) -> FasterRCNN:
             param.requires_grad = True
 
     return model
+
 
 def train_one_epoch(model, optimizer, data_loader, device) -> Any | float:
     """Train the model for one epoch"""
@@ -68,16 +70,22 @@ def validation(model, data_loader, device) -> Any | float:
             outputs = model(images)
             all_outputs.extend(outputs)
             all_targets.extend(targets)
-            precision, recall, mean_iou = compute_precision_recall_iou(all_outputs, all_targets)
-            mlflow.log_metrics({
-                "precision": precision,
-                "recall": recall,
-                "iou": mean_iou,
-            })
+            precision, recall, mean_iou = compute_precision_recall_iou(
+                all_outputs, all_targets
+            )
+            mlflow.log_metrics(
+                {
+                    "precision": precision,
+                    "recall": recall,
+                    "iou": mean_iou,
+                }
+            )
 
             for i in range(len(outputs)):
-                if 'scores' in outputs[i]:
-                    outputs[i]['scores'] = torch.ones(len((outputs[i]['boxes'])), device=device)
+                if "scores" in outputs[i]:
+                    outputs[i]["scores"] = torch.ones(
+                        len((outputs[i]["boxes"])), device=device
+                    )
             metric.update(outputs, targets)
 
             # Forward pass
@@ -93,10 +101,12 @@ def validation(model, data_loader, device) -> Any | float:
 
             total_loss += losses.item()
         result = metric.compute()
-        mlflow.log_metrics({
-            "map": result['map'].item(),
-            "map_50": result['map_50'].item(),
-            "map_75": result['map_75'].item(),
-        })
+        mlflow.log_metrics(
+            {
+                "map": result["map"].item(),
+                "map_50": result["map_50"].item(),
+                "map_75": result["map_75"].item(),
+            }
+        )
 
     return total_loss / len(data_loader), precision, recall, mean_iou

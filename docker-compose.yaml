@@ -9,6 +9,7 @@ services:
       - /home/feem/Workspace/bdd_analysis/assignment_data_bdd:/app/assignment_data_bdd
       - ./mlruns:/app/mlruns
       - ./config.yaml:/app/config.yaml
+      - ./artifacts:/app/artifacts
     environment:
       - MLFLOW_TRACKING_URI=http://mlflow:5000
     working_dir: /app

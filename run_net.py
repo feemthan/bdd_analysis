@@ -150,9 +150,10 @@ if __name__ == "__main__":
                 best_loss = val_loss
 
                 torch.save(model.state_dict(), "best_model.pth")
-
-                mlflow.log_artifact("./best_model.pth")
-                mlflow.log_artifact("./config.yaml")
+                # This can also be done for each experiment wise
+                # But not done here for the sake of space consumption
+                mlflow.log_artifact("./artifacts/best_model.pth")
+                mlflow.log_artifact("./artifacts/config.yaml")
                 print("Training complete! Model saved to 'best_model.pth'")
                 if val_loss < 0.01:
                     break

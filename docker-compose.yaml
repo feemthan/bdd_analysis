@@ -1,0 +1,45 @@
+services:
+  bdd:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    image: bdd:latest
+    container_name: bdd_container
+    volumes:
+      - /home/feem/Workspace/bdd_analysis/assignment_data_bdd:/app/assignment_data_bdd
+      - ./mlruns:/app/mlruns
+      - ./config.yaml:/app/config.yaml
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000
+    working_dir: /app
+    tty: true
+    stdin_open: true
+    command: bash #["uv", "run", "run_net.py"]
+    networks:
+      - bdd_network
+    depends_on:
+      - mlflow
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+  mlflow:
+    build:
+      context: .
+      dockerfile: Dockerfile.mlflow
+    image: mlflow:latest
+    container_name: mlflow_server
+    ports:
+      - "5000:5000" # Expose MLflow UI on host port 5000
+    volumes:
+      - ./mlruns:/mlruns # Persist MLflow data
+      - ./artifacts:/artifacts # Store artifacts
+    networks:
+      - bdd_network
+
+networks:
+  bdd_network:
+    driver: bridge

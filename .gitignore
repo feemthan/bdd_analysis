@@ -8,3 +8,23 @@ wheels/
 
 # Virtual environments
 .venv
+.python-version
+
+.vscode
+
+# datasets
+assignment_data_bdd
+
+# mlflow
+mlruns/
+artifacts/
+
+# Jupyter Notebooks for testing
+viznotebooks
+notebook_outputs
+
+# env file
+.env
+
+# model file
+*.pth

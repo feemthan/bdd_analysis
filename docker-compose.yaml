@@ -15,7 +15,7 @@ services:
     working_dir: /app
     tty: true
     stdin_open: true
-    command: bash #["uv", "run", "run_net.py"]
+    command: ["uv", "run", "run_net.py"]
     networks:
       - bdd_network
     depends_on:

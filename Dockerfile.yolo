@@ -24,6 +24,9 @@ COPY ./src /app/src
 COPY configuration /app/configuration
 COPY ./*.py /app
 
+RUN chmod +x ./downloadyolov8.sh
+RUN  ./downloadyolov8.sh
+
 RUN mkdir -p /mlruns /artifacts
 
 # Command to run when container starts

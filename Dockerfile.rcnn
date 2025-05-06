@@ -33,6 +33,9 @@ COPY ./*.py /app
 RUN mkdir -p /root/.cache/torch/hub/checkpoints/
 COPY ./fasterrcnn_resnet50_fpn_coco-258fb6c6.pth /root/.cache/torch/hub/checkpoints/fasterrcnn_resnet50_fpn_coco-258fb6c6.pth
 
+RUN chmod +x ./download_models.sh
+RUN ./download_models.sh
+
 RUN mkdir -p /mlruns /artifacts
 
 # CMD ["uv", "run", "main.py", "--model", "RCNN"]

@@ -19,27 +19,32 @@ from src.utils.common import log_model_with_pyproject_env
 CONFIG_PATH = "configuration"
 
 
-def yoloTrain(config_file, client) -> None:
+def yoloTrain(config_file, flavour, client) -> None:
     from src.model.models import get_YOLO_model
     from ultralytics import settings
+
     settings.update({"mlflow": True})
     mlflow.set_tracking_uri("http://localhost:5000")
     experiment_name = "bdd_detection_yolov8_experiment"
     mlflow.set_experiment(experiment_name)
-    mlflow.set_tag("mlflow.runName", "yolov8_training")
+    mlflow.set_tag("mlflow.runName", f"{flavour}_training")
+
     with open(config_file, "r") as f:
         config = yaml.safe_load(f)
 
     TRAIN_LABELS_JSON = config["TRAIN_LABELS_JSON"]
     VAL_LABELS_JSON = config["VAL_LABELS_JSON"]
     IMG_PATH = config["IMG_PATH"]
+
     data_yaml_path = os.path.join("dataset_yolo", "data.yaml")
     if not os.path.exists(data_yaml_path):
         data_yaml_path = prepare_yolo_dataset(
             TRAIN_LABELS_JSON, VAL_LABELS_JSON, IMG_PATH
         )
-    config_file = os.path.join(CONFIG_PATH, config["custom_model"])
-    model = get_YOLO_model(config=config, custom_model_path=config_file)
+
+    if config['custom_model']:
+        config_file = os.path.join(CONFIG_PATH, config["custom_model"])
+    model = get_YOLO_model(config=config, flavour= flavour, custom_model_path=config_file)
     results, model = train_yolo_model(
         data_yaml_path=data_yaml_path,
         model=model,

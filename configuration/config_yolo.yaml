@@ -10,5 +10,5 @@ learning_rate: 0.01
 num_epochs: 1
 img_dim: 64
 model_type: yolov8n
-custom_model: yolov8_custom_model.yaml
+custom_model: False
 project_name: bdd_yolov8

@@ -2,7 +2,7 @@ services:
   bdd:
     build:
       context: .
-      dockerfile: Dockerfile
+      dockerfile: Dockerfile.rcnn
     image: bdd:latest
     container_name: bdd_container
     volumes:
@@ -12,10 +12,41 @@ services:
       - ./artifacts:/app/artifacts
     environment:
       - MLFLOW_TRACKING_URI=http://mlflow:5000
+      - PYTHONUNBUFFERED=1
     working_dir: /app
     tty: true
     stdin_open: true
-    command: ["uv", "run", "run_net.py"]
+    command: bash # ["uv", "run", "run_net.py"]
+    networks:
+      - bdd_network
+    depends_on:
+      - mlflow
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+  yolo:
+    build:
+      context: .
+      dockerfile: Dockerfile.yolo
+    image: yolo_bdd:latest
+    container_name: yolo_bdd_container
+    volumes:
+      - /home/feem/Workspace/yolo_bdd/dataset_yolo:/app/dataset_yolo
+      - /home/feem/Workspace/yolo_bdd/bdd_yolov8:/app/bdd_yolov8
+      - ./config.yaml:/app/config.yaml
+      - ./mlruns:/mlruns # Share MLflow data with MLflow server
+      - ./artifacts:/app/artifacts # Share MLflow data with MLflow server
+    working_dir: /app
+    tty: true
+    stdin_open: true
+    command: bash # python train.py
+    environment:
+      - MLFLOW_TRACKING_URI=http://mlflow:5000 # Point to MLflow service
+      - PYTHONUNBUFFERED=1
     networks:
       - bdd_network
     depends_on:

@@ -7,7 +7,6 @@ services:
     container_name: rcnn_bdd
     volumes:
       - /home/feem/Workspace/bdd_analysis/assignment_data_bdd:/app/assignment_data_bdd
-      - ./config.yaml:/app/config.yaml
       - ./mlruns:/app/mlruns # Share MLflow data with MLflow server
       - ./artifacts:/app/artifacts # Store artifacts
     environment:
@@ -35,9 +34,8 @@ services:
     image: yolo:latest
     container_name: yolo_bdd_container
     volumes:
-      - /home/feem/Workspace/yolo_bdd/dataset_yolo:/app/dataset_yolo
-      - /home/feem/Workspace/yolo_bdd/bdd_yolov8:/app/bdd_yolov8
-      - ./config.yaml:/app/config.yaml
+      - ./dataset_yolo:/app/dataset_yolo
+      - ./bdd_yolov8:/app/bdd_yolov8
       - ./mlruns:/mlruns # Share MLflow data with MLflow server
       - ./artifacts:/app/artifacts # Store artifacts
     working_dir: /app
@@ -51,6 +49,29 @@ services:
       - bdd_network
     depends_on:
       - mlflow
+    deploy:
+      resources:
+        reservations:
+          devices:
+            - driver: nvidia
+              count: all
+              capabilities: [gpu]
+  yoloinf:
+    build:
+      context: .
+      dockerfile: Dockerfile.yoloinf
+    image: yolo_inf:latest
+    container_name: yolo_inf_container
+    working_dir: /app
+    volumes:
+      - ./assignment_data_bdd/bdd100k_images_100k/bdd100k/images/100k/test:/app/test
+      - ./output_files:/app/output_files
+      - ./models/yolo:/app/models/yolo
+    tty: true
+    stdin_open: true
+    command: ["uv", "run", "inference_yolo.py"]
+    networks:
+      - bdd_network
     deploy:
       resources:
         reservations:

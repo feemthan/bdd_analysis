@@ -14,18 +14,25 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-COPY requirements.txt .
-RUN pip install --no-cache-dir -r requirements.txt
+ADD https://astral.sh/uv/install.sh /uv-installer.sh
 
-COPY yolov8n.pt .
+# Run the installer then remove it
+RUN sh /uv-installer.sh && rm /uv-installer.sh
+
+# Ensure the installed binary is on the `PATH`
+ENV PATH="/root/.local/bin/:$PATH"
+
+ADD ./pyproject.toml /app
+RUN uv sync
 
 # Copy project files
 COPY ./src /app/src
 COPY configuration /app/configuration
 COPY ./*.py /app
 
-RUN chmod +x ./downloadyolov8.sh
-RUN  ./downloadyolov8.sh
+COPY ./download_yolov8.sh .
+RUN chmod +x ./download_yolov8.sh
+RUN  ./download_yolov8.sh
 
 RUN mkdir -p /mlruns /artifacts
 

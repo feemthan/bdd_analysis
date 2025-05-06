@@ -36,3 +36,6 @@ bdd_yolov8
 
 # logs
 *.log
+
+# model outputs
+output_files

@@ -21,12 +21,11 @@ def get_model_RCNN(num_classes, freeze_backbone) -> FasterRCNN:
     return model
 
 
-def get_YOLO_model(config, flavour, custom_model_path=False):
+def get_YOLO_model(config, flavour, custom_config_path=False):
     from ultralytics import YOLO
-    if custom_model_path:
-        model = YOLO(custom_model_path)
-    elif flavour == "yolov8n":
-        model = YOLO(config["model_type"])
+    if custom_config_path:
+        model = YOLO(custom_config_path)
     else:
+        config['model_type'] = flavour
         model = YOLO(flavour)
     return model

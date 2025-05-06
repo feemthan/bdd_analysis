@@ -7,9 +7,9 @@ services:
     container_name: bdd_container
     volumes:
       - /home/feem/Workspace/bdd_analysis/assignment_data_bdd:/app/assignment_data_bdd
-      - ./mlruns:/app/mlruns
       - ./config.yaml:/app/config.yaml
-      - ./artifacts:/app/artifacts
+      - ./mlruns:/app/mlruns # Share MLflow data with MLflow server
+      - ./artifacts:/app/artifacts # Store artifacts
     environment:
       - MLFLOW_TRACKING_URI=http://mlflow:5000
       - PYTHONUNBUFFERED=1
@@ -39,7 +39,7 @@ services:
       - /home/feem/Workspace/yolo_bdd/bdd_yolov8:/app/bdd_yolov8
       - ./config.yaml:/app/config.yaml
       - ./mlruns:/mlruns # Share MLflow data with MLflow server
-      - ./artifacts:/app/artifacts # Share MLflow data with MLflow server
+      - ./artifacts:/app/artifacts # Store artifacts
     working_dir: /app
     tty: true
     stdin_open: true

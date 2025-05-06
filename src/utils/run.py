@@ -1,4 +1,5 @@
 import os
+import shutil
 
 import mlflow
 import torch
@@ -24,7 +25,7 @@ def yoloTrain(config_file, flavour, client) -> None:
     from ultralytics import settings
 
     settings.update({"mlflow": True})
-    mlflow.set_tracking_uri("http://localhost:5000")
+    mlflow.set_tracking_uri("http://mlflow:5000")
     experiment_name = "bdd_detection_yolov8_experiment"
     mlflow.set_experiment(experiment_name)
     mlflow.set_tag("mlflow.runName", f"{flavour}_training")
@@ -43,8 +44,10 @@ def yoloTrain(config_file, flavour, client) -> None:
         )
 
     if config['custom_model']:
-        config_file = os.path.join(CONFIG_PATH, config["custom_model"])
-    model = get_YOLO_model(config=config, flavour=flavour, custom_model_path=config_file)
+        custom_config_path = os.path.join(CONFIG_PATH, config["custom_model"])
+        model = get_YOLO_model(config=config, flavour=flavour, custom_run=custom_config_path)
+    else:
+        model = get_YOLO_model(config=config, flavour=flavour)
     results, model = train_yolo_model(
         data_yaml_path=data_yaml_path,
         model=model,
@@ -55,6 +58,32 @@ def yoloTrain(config_file, flavour, client) -> None:
 
     print("the following are the results of the training of YOLO model")
     print(results)
+
+    # Save the model
+    best_src = getattr(model, "best", None)
+    if best_src and os.path.isfile(best_src):
+        dst_dir = "models/yolo"
+        os.makedirs(dst_dir, exist_ok=True)
+        dst_path = os.path.join(dst_dir, "model.pt")
+        shutil.copy(best_src, dst_path)
+
+    # Log metrics
+    metrics = results.results_dict
+    mlflow.log_metrics({
+        "mAP50": metrics.get('metrics/mAP50(B)', 0),
+        "mAP50-95": metrics.get('metrics/mAP50-95(B)', 0),
+        "precision": metrics.get('metrics/precision(B)', 0),
+        "recall": metrics.get('metrics/recall(B)', 0),
+        "val_loss": metrics.get('val/loss', 0),
+        "train_loss": metrics.get('train/loss', 0),
+    })
+
+    # Log best model
+    best_model_path = model.best
+    mlflow.pytorch.log_model(model, "best_model")
+    mlflow.log_artifact("./config.yaml")
+    mlflow.log_artifact(data_yaml_path)
+    mlflow.log_artifact(best_model_path)
 
 
 def RCNNTrain(config_file, client) -> None:

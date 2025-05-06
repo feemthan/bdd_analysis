@@ -13,15 +13,15 @@ from src.utils.Dataloaders import (
 )
 from torch.utils.data import DataLoader
 from src.utils.trainer import train_one_epoch, train_yolo_model, validation
-from ultralytics import settings
 
-from src.model.models import get_model_RCNN, get_YOLO_model
 from src.utils.common import log_model_with_pyproject_env
 
 CONFIG_PATH = "configuration"
 
 
 def yoloTrain(config_file, client) -> None:
+    from src.model.models import get_YOLO_model
+    from ultralytics import settings
     settings.update({"mlflow": True})
     mlflow.set_tracking_uri("http://localhost:5000")
     experiment_name = "bdd_detection_yolov8_experiment"
@@ -53,7 +53,8 @@ def yoloTrain(config_file, client) -> None:
 
 
 def RCNNTrain(config_file, client) -> None:
-    mlflow.set_tracking_uri("http://localhost:5000")
+    from src.model.models import get_model_RCNN
+
     experiment_name = "bdd_detection_FRCNN_experiment"
     pip_reqs = log_model_with_pyproject_env()
 

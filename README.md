@@ -199,6 +199,8 @@ MLflow provides visualization of metrics across training. Visit the MLflow UI at
   The tuning was done but not enough time was spent on this. due to the complexity of the dataset and the model. Perhaps a more efficient way to do this was to take a larger subset of the train dataset and train to solve for time.
 - Model expansion with adding more layers for both Faster R-CNN and YOLOv8.
   I spent hours thinking about how to implement this more efficiently with partial activation of a few outermost layers or even quantization but I saw that adding one more layer was adding 20% more time to the training (mainly for YOLOv8). Also this project was not to fully showcase the best model but to show the capabilities of the model and to pipeline it well.
+- Better deployment options like Docker Swarm or Kubernetes.
+   This was not built due to time constraints. Kubeflow is a great tool that can also be used.
 
 ## 🙏 Acknowledgements
 

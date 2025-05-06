@@ -39,3 +39,6 @@ bdd_yolov8
 
 # model outputs
 output_files
+
+# uv files
+uv.lock

@@ -14,6 +14,7 @@ wheels/
 
 # datasets
 assignment_data_bdd
+dataset_yolo
 
 # mlflow
 mlruns/
@@ -28,3 +29,10 @@ notebook_outputs
 
 # model file
 *.pth
+*.pt
+
+# yolo assets
+bdd_yolov8
+
+# logs
+*.log

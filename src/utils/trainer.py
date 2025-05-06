@@ -2,31 +2,34 @@ from typing import Any
 
 import mlflow
 import torch
+from src.utils.metrics import compute_precision_recall_iou
 from torchmetrics.detection.mean_ap import MeanAveragePrecision
-from torchvision.models.detection import fasterrcnn_resnet50_fpn
-from torchvision.models.detection.faster_rcnn import FasterRCNN, FastRCNNPredictor
 from tqdm import tqdm
 
-from src.create_dataloaders import compute_precision_recall_iou
 
+def train_yolo_model(
+    data_yaml_path, config, model, project_name, custom_model_path=None
+) -> tuple:
+    """Train YOLOv8 model with the given configuration"""
+    # Create a new model from the YOLOv8 pretrained model
 
-def get_model(num_classes, freeze_backbone) -> FasterRCNN:
-    """Return Faster R-CNN model with ResNet50 backbone"""
-    # Load pre-trained Faster R-CNN
-    model = fasterrcnn_resnet50_fpn(weights="DEFAULT")
+    # Set up training configuration
+    results = model.train(
+        data=data_yaml_path,
+        epochs=config["num_epochs"],
+        imgsz=config["img_dim"],
+        batch=config["batch_size"],
+        workers=config["num_workers"],
+        device="cuda" if torch.cuda.is_available() else "cpu",
+        pretrained=True,
+        project=project_name,
+        name="train",
+        save=True,
+        verbose=True,
+    )
 
-    # Replace the classifier with a new one for our number of classes
-    in_features = model.roi_heads.box_predictor.cls_score.in_features
-    model.roi_heads.box_predictor = FastRCNNPredictor(in_features, num_classes)
-
-    if freeze_backbone:
-        # Freeze all layers except the head
-        for param in model.parameters():
-            param.requires_grad = False
-        for param in model.roi_heads.box_predictor.parameters():
-            param.requires_grad = True
-
-    return model
+    # Return final results
+    return results, model
 
 
 def train_one_epoch(model, optimizer, data_loader, device) -> Any | float:
@@ -93,11 +96,6 @@ def validation(model, data_loader, device) -> Any | float:
             loss_dict = model(images, targets)
             losses = sum(loss for loss in loss_dict.values())
             model.eval()
-
-            # Backward pass
-            # optimizer.zero_grad()
-            # losses.backward()
-            # optimizer.step()
 
             total_loss += losses.item()
         result = metric.compute()

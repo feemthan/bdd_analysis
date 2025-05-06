@@ -1,0 +1,18 @@
+IMG_PATH: assignment_data_bdd/bdd100k_images_100k/bdd100k/images/100k
+LABELS_PATH: assignment_data_bdd/bdd100k_labels_release/bdd100k/labels
+TRAIN_LABELS_JSON: assignment_data_bdd/bdd100k_labels_release/bdd100k/labels/bdd100k_labels_images_train.json
+VAL_LABELS_JSON: assignment_data_bdd/bdd100k_labels_release/bdd100k/labels/bdd100k_labels_images_val.json
+
+num_classes: 11
+batch_size: 8
+num_workers: 8
+learning_rate: 0.0001
+weight_decay: 0.0005
+subset_size: 10
+num_epochs: 1
+train_val_split: [0.8, 0.2]
+img_dim: 128
+freeze_backbone: True
+model_type: faster_rcnn_resnet50_fpn
+
+MLFLOW_TRACKING_URI: http://mlflow:5000

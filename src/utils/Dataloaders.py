@@ -6,9 +6,10 @@ from typing import Any, LiteralString
 import cv2
 import torch
 import yaml
-from src.constants import class_to_idx
 from PIL import Image
 from torchvision import transforms
+
+from src.constants import class_to_idx
 
 
 def collate_fn(batch) -> tuple[tuple[Any, ...], ...]:

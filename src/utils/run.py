@@ -5,6 +5,9 @@ import mlflow
 import torch
 import torch.optim as optim
 import yaml
+from torch.utils.data import DataLoader
+
+from src.utils.common import log_model_with_pyproject_env
 from src.utils.Dataloaders import (
     CustomDataset,
     collate_fn,
@@ -12,17 +15,15 @@ from src.utils.Dataloaders import (
     get_val_transform,
     prepare_yolo_dataset,
 )
-from torch.utils.data import DataLoader
 from src.utils.trainer import train_one_epoch, train_yolo_model, validation
-
-from src.utils.common import log_model_with_pyproject_env
 
 CONFIG_PATH = "configuration"
 
 
 def yoloTrain(config_file, flavour, client) -> None:
-    from src.model.models import get_YOLO_model
     from ultralytics import settings
+
+    from src.model.models import get_YOLO_model
 
     settings.update({"mlflow": True})
     mlflow.set_tracking_uri("http://mlflow:5000")
@@ -43,16 +44,18 @@ def yoloTrain(config_file, flavour, client) -> None:
             TRAIN_LABELS_JSON, VAL_LABELS_JSON, IMG_PATH
         )
 
-    if config['custom_model']:
+    if config["custom_model"]:
         custom_config_path = os.path.join(CONFIG_PATH, config["custom_model"])
-        model = get_YOLO_model(config=config, flavour=flavour, custom_run=custom_config_path)
+        model = get_YOLO_model(
+            config=config, flavour=flavour, custom_run=custom_config_path
+        )
     else:
         model = get_YOLO_model(config=config, flavour=flavour)
     results, model = train_yolo_model(
         data_yaml_path=data_yaml_path,
         model=model,
         config=config,
-        project_name=config['project_name'],
+        project_name=config["project_name"],
         custom_model_path=config_file,
     )
 
@@ -69,14 +72,16 @@ def yoloTrain(config_file, flavour, client) -> None:
 
     # Log metrics
     metrics = results.results_dict
-    mlflow.log_metrics({
-        "mAP50": metrics.get('metrics/mAP50(B)', 0),
-        "mAP50-95": metrics.get('metrics/mAP50-95(B)', 0),
-        "precision": metrics.get('metrics/precision(B)', 0),
-        "recall": metrics.get('metrics/recall(B)', 0),
-        "val_loss": metrics.get('val/loss', 0),
-        "train_loss": metrics.get('train/loss', 0),
-    })
+    mlflow.log_metrics(
+        {
+            "mAP50": metrics.get("metrics/mAP50(B)", 0),
+            "mAP50-95": metrics.get("metrics/mAP50-95(B)", 0),
+            "precision": metrics.get("metrics/precision(B)", 0),
+            "recall": metrics.get("metrics/recall(B)", 0),
+            "val_loss": metrics.get("val/loss", 0),
+            "train_loss": metrics.get("train/loss", 0),
+        }
+    )
 
     # Log best model
     best_model_path = model.best

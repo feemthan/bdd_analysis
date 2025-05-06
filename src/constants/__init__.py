@@ -1,5 +1,5 @@
-CONFIG_YOLO = 'configuration/config_yolo.yaml'
-CONFIG_RCNN = 'configuration/config_RCNN.yaml'
+CONFIG_YOLO = "configuration/config_yolo.yaml"
+CONFIG_RCNN = "configuration/config_RCNN.yaml"
 
 class_to_idx = {
     "pedestrian": 1,

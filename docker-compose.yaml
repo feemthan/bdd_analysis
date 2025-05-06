@@ -69,7 +69,7 @@ services:
       - ./models/yolo:/app/models/yolo
     tty: true
     stdin_open: true
-    command: ["uv", "run", "inference_yolo.py"]
+    command: uv run inference_yolo.py
     networks:
       - bdd_network
     deploy:
@@ -86,7 +86,7 @@ services:
     image: mlflow:latest
     container_name: mlflow_server
     ports:
-      - "5000:5000" # Expose MLflow UI on host port 5000
+      - 5000:5000 # Expose MLflow UI on host port 5000
     volumes:
       - ./mlruns:/mlruns # Persist MLflow data
       - ./artifacts:/artifacts # Store artifacts

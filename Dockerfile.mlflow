@@ -3,11 +3,11 @@ FROM python:3.12-slim
 # Install dependencies
 RUN pip install --no-cache-dir mlflow
 
-# Create MLflow directories
-RUN mkdir -p /mlruns /artifacts
-
 # Set working directory
 WORKDIR /app
+
+# Create MLflow directories
+RUN mkdir -p /mlruns /artifacts
 
 # Expose port for MLflow UI
 EXPOSE 5000

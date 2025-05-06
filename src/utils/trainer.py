@@ -2,9 +2,10 @@ from typing import Any
 
 import mlflow
 import torch
-from src.utils.metrics import compute_precision_recall_iou
 from torchmetrics.detection.mean_ap import MeanAveragePrecision
 from tqdm import tqdm
+
+from src.utils.metrics import compute_precision_recall_iou
 
 
 def train_yolo_model(

@@ -1,5 +1,6 @@
-from PIL import Image
 import os
+
+from PIL import Image
 from ultralytics import YOLO
 
 # Load a pretrained YOLO11n model
@@ -9,7 +10,7 @@ model = YOLO("models/yolo/best.pt")
 # Run inference on 'bus.jpg'
 # results = model(["https://ultralytics.com/images/bus.jpg", "https://ultralytics.com/images/zidane.jpg"])  # results list
 
-test_dataset_path = './test'
+test_dataset_path = "./test"
 dir_list = os.listdir(test_dataset_path)[:3]
 
 images_paths = [f"{test_dataset_path}/{i}" for i in dir_list]

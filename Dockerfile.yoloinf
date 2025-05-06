@@ -22,7 +22,7 @@ RUN sh /uv-installer.sh && rm /uv-installer.sh
 # Ensure the installed binary is on the `PATH`
 ENV PATH="/root/.local/bin/:$PATH"
 
-ADD ./pyproject.toml /app
+COPY ./pyproject.toml /app
 RUN uv sync
 
 # Copy project files

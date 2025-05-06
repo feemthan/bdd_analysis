@@ -6,16 +6,16 @@
 
 ## 📋 Table of Contents
 
-- [Overview]
-- [Project Structure]
-- [Models]
-- [Installation]
-- [Usage]
-- [MLflow Tracking]
-- [Configuration]
-- [Results]
-- [Contributing]
-- [License]
+- [Overview](#-overview)
+- [Project Structure](#-project-structure)
+- [Models](#faster-r-cnn)
+- [Installation](#-installation)
+- [Usage](#run-faster-r-cnn-training)
+- [MLflow Tracking](#-mlflow-tracking)
+- [Configuration](#model-specific-configuration)
+- [Results](#-results)
+- [Future Improvements](#future-improvements)
+- [Acknowledgements](#-acknowledgements)
 
 ## 🔍 Overview
 
@@ -175,7 +175,7 @@ Tracked metrics include:
 | Model        | Precision | Recall | mAP@0.5 | mAP@0.5:0.95 | Inference Time (ms) |
 | ------------ | --------- | ------ | ------- | ------------ | ------------------- |
 | Faster R-CNN | TBD       | TBD    | TBD     | TBD          | TBD                 |
-| YOLOv8n      | TBD       | TBD    | TBD     | TBD          | 18ms           |
+| YOLOv8n      | TBD       | TBD    | TBD     | TBD          | 18ms                |
 
 ### Visualization
 
@@ -184,6 +184,9 @@ MLflow provides visualization of metrics across training. Visit the MLflow UI at
 - Learning curves
 - Precision-recall curves
 - Streamlit app for interactive visualization
+  ![Streamlit Interface](./streamlit_1.png)
+  ![Streamlit Interface](./streamlit_2.png)
+  ![Streamlit Interface](./streamlit_3.png)
 
 ## Future Improvements
 
@@ -191,9 +194,9 @@ MLflow provides visualization of metrics across training. Visit the MLflow UI at
   This was not built due to the model not performing as well as YOLOv8 in this timeframe. RCNN is slower but more accurate. But requires much hiher compute resources.
   By the time of writing this, I had not yet completed the RCNN model inference script. Will add this if time permits.
 - More efficient data preprocessing and augmentation
-   Not a lot of time was spent on this, this is something that was in the pipeline but unfortunately slipped.
+  Not a lot of time was spent on this, this is something that was in the pipeline but unfortunately slipped.
 - Hyperparameter tuning in Faster R-CNN
-   The tuning was done but not enough time was spent on this. due to the complexity of the dataset and the model. Perhaps a more efficient way to do this was to take a larger subset of the train dataset and train to solve for time.
+  The tuning was done but not enough time was spent on this. due to the complexity of the dataset and the model. Perhaps a more efficient way to do this was to take a larger subset of the train dataset and train to solve for time.
 - Model expansion with adding more layers for both Faster R-CNN and YOLOv8.
   I spent hours thinking about how to implement this more efficiently with partial activation of a few outermost layers or even quantization but I saw that adding one more layer was adding 20% more time to the training (mainly for YOLOv8). Also this project was not to fully showcase the best model but to show the capabilities of the model and to pipeline it well.
 

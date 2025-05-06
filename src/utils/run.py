@@ -58,15 +58,6 @@ def RCNNTrain(config_file, client) -> None:
     experiment_name = "bdd_detection_FRCNN_experiment"
     pip_reqs = log_model_with_pyproject_env()
 
-    # try:
-    #     experiment_id = mlflow.get_experiment_by_name(experiment_name).experiment_id
-    #     print(f"Using existing experiment '{experiment_name}' with ID: {experiment_id}")
-    # except (mlflow.exceptions.MlflowException, AttributeError) as e:
-    #     print(f"MLflow exception: {e}")
-
-    # experiment_id = mlflow.create_experiment(experiment_id)
-    # print(f"Created new experiment '{experiment_name}' with ID: {experiment_id}")
-
     mlflow.set_experiment(experiment_name)
 
     with open(config_file, "r") as f:

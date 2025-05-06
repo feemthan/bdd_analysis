@@ -6,9 +6,10 @@ services:
     image: rcnn:latest
     container_name: rcnn_bdd
     volumes:
-      - /home/feem/Workspace/bdd_analysis/assignment_data_bdd:/app/assignment_data_bdd
+      - ./assignment_data_bdd:/app/assignment_data_bdd
       - ./mlruns:/app/mlruns # Share MLflow data with MLflow server
       - ./artifacts:/app/artifacts # Store artifacts
+      - ./models/rcnn:/app/models/rcnn
     environment:
       - MLFLOW_TRACKING_URI=http://mlflow:5000
       - PYTHONUNBUFFERED=1

@@ -34,7 +34,7 @@ Both models are trained to detect 10 key object classes important for autonomous
 
 ```bash
 .
-├── artifacts/              # Model artifacts storage
+├── assignment_data_bdd/    # Default data
 ├── configuration/          # Configuration files
 │   ├── config_RCNN.yaml
 │   ├── config_yolo.yaml
@@ -48,6 +48,13 @@ Both models are trained to detect 10 key object classes important for autonomous
 │   ├── ├── val/
 │   ├── data.yaml
 ├── mlruns/                 # MLflow runs data
+├── models/                 # Models save files
+│   ├── rcnn/               # RCNN model save files
+│   ├── ├── best_model.pt/  # Best model save
+│   ├── yolo/               # YOLO model save files
+│   ├── ├── args.yaml/      # best model save files
+│   ├── ├── best_model.pt/  # best model save files
+│   ├── ├── best.pt/        # best model save files
 ├── src/
 │   ├── model/              # Model definitions
 │   ├── ├── models/         # Model definitions

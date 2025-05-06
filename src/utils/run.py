@@ -211,6 +211,7 @@ def RCNNTrain(config_file, client) -> None:
                 best_loss = val_loss
 
                 torch.save(model.state_dict(), "artifacts/best_model.pth")
+                torch.save(model.state_dict(), "models/rcnn/best_model.pth")
                 # This can also be done for each experiment wise
                 # But not done here for the sake of space consumption
                 # mlflow.log_artifact("best_model.pth")

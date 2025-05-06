@@ -44,7 +44,7 @@ def yoloTrain(config_file, flavour, client) -> None:
 
     if config['custom_model']:
         config_file = os.path.join(CONFIG_PATH, config["custom_model"])
-    model = get_YOLO_model(config=config, flavour= flavour, custom_model_path=config_file)
+    model = get_YOLO_model(config=config, flavour=flavour, custom_model_path=config_file)
     results, model = train_yolo_model(
         data_yaml_path=data_yaml_path,
         model=model,

@@ -43,7 +43,7 @@ services:
     working_dir: /app
     tty: true
     stdin_open: true
-    command: bash # python main.py --model YOLO
+    command: bash # python main.py --model YOLO --flavour yolov8n
     environment:
       - MLFLOW_TRACKING_URI=http://mlflow:5000 # Point to MLflow service
       - PYTHONUNBUFFERED=1

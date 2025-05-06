@@ -1,6 +1,5 @@
 from torchvision.models.detection import fasterrcnn_resnet50_fpn
 from torchvision.models.detection.faster_rcnn import FasterRCNN, FastRCNNPredictor
-from ultralytics import YOLO
 
 
 def get_model_RCNN(num_classes, freeze_backbone) -> FasterRCNN:
@@ -22,7 +21,8 @@ def get_model_RCNN(num_classes, freeze_backbone) -> FasterRCNN:
     return model
 
 
-def get_YOLO_model(config, custom_model_path=False) -> YOLO:
+def get_YOLO_model(config, custom_model_path=False):
+    from ultralytics import YOLO
     if custom_model_path:
         model = YOLO(custom_model_path)
     else:

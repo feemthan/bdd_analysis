@@ -14,7 +14,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 
 WORKDIR /app
 
-ADD https://astral.sh/uv/install.sh /uv-installer.sh
+RUN wget https://astral.sh/uv/install.sh -q -O ./uv-installer.sh
 
 # Run the installer then remove it
 RUN sh /uv-installer.sh && rm /uv-installer.sh

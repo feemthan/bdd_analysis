@@ -13,7 +13,7 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     && rm -rf /var/lib/apt/lists/*
 
 # Download the latest installer
-COPY https://astral.sh/uv/install.sh /uv-installer.sh
+RUN wget https://astral.sh/uv/install.sh -q -O ./uv-installer.sh
 
 # Run the installer then remove it
 RUN sh /uv-installer.sh && rm /uv-installer.sh
